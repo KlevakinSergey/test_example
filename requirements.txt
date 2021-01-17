@@ -1,0 +1,7 @@
+celery
+Django
+djangorestframework
+djangorestframework-jwt
+Pillow
+PyJWT
+redis

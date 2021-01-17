@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    command:  bash -c './manage.py migrate  && ./manage.py runserver 0.0.0.0:8000'
+    volumes:
+      - .:/code
+      - static_volume:/code/staticfiles
+      - media_volume:/code/mediafiles
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./.env
+  redis:
+    container_name: redis
+    image: redis
+    restart: always
+    ports:
+      - '6379:6379'
+
+
+  celery:
+    build: .
+    command: celery --app=main worker --loglevel=info
+    user: nobody
+
+    env_file:
+      - ./.env
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+volumes:
+  static_volume:
+  media_volume:
